@@ -1,0 +1,512 @@
+openapi: 3.0.3
+info:
+  title: AltaStore Project
+  version: 1.0.0
+  description: AltaStore RESTfulAPI Project Documentation with Echo Framework (Golang)
+servers:
+  - url: http://127.0.0.1:8000/api/
+    description: API Access Link for AltaStore Project
+tags:
+  - name: Auth
+    description: API Authentication
+  - name: Customers
+    description: API Customers
+  - name: Products
+    description: API Products
+  - name: Product Categories
+    description: API Product Categories
+paths:
+  /register:
+    post:
+      tags:
+        - Auth
+      summary: Register User
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                address:
+                  type: string
+                gender:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/ResponseRegister'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /login:
+    post:
+      tags:
+        - Auth
+      summary: Login User
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/ResponseLogin'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+          
+  /customers:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Customers
+      summary: Get All Customer
+      responses:
+        '200':
+          $ref: '#/components/responses/ResponseGetAllCustomer'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Get All Product
+      responses:
+        '200':
+          $ref: '#/components/responses/ResponseGetAllProduct'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Products
+      summary: Add Product
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                price:
+                  type: string
+                stock:
+                  type: string
+                category_id:
+                  $ref: "#/components/schemas/Categories/properties/id"
+      responses:
+        '200':
+          $ref: '#/components/responses/ResponseAddProduct'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get Product by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID For Spesific Product
+          schema:
+            type: integer 
+      responses:
+        '200':
+          $ref: '#/components/responses/ResponseGetProduct'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Products
+      summary: Edit Product by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID For Spesific Product
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                price:
+                  type: string
+                stock:
+                  type: string
+                category_id:
+                  $ref: "#/components/schemas/Categories/properties/id"
+      responses:
+        '200':
+          $ref: '#/components/responses/ResponseEditProduct'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Products
+      summary: Delete Product by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID For Spesific Product
+          schema:
+            type: integer
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseDeleteProduct"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+
+  /categories:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Product Categories
+      summary: Get All Categories
+      responses:
+        '200':
+          $ref: '#/components/responses/ResponseGetAllCategories'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Product Categories
+      summary: Add Categories
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/ResponseAddCategories'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /categories/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Product Categories
+      summary: Get Categories by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID For Spesific Categories
+          schema:
+            type: integer 
+      responses:
+        '200':
+          $ref: '#/components/responses/ResponseGetCategories'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Product Categories
+      summary: Edit Categories by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID For Spesific Categories
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/ResponseEditCategories'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Product Categories
+      summary: Delete Categories by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID For Spesific Categories
+          schema:
+            type: integer
+      responses:
+        '200':
+          $ref: "#/components/responses/ResponseDeleteCategories"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+    
+components:
+  responses:
+    StatusOK:
+      description: Status OK
+      content:
+        application/json:
+          example:
+            success: true
+            message: Status OK
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          example:
+            success: false
+            message: Bad Request
+    ServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          example:
+            success: false
+            message: Internal Server Error
+    ResponseRegister:
+      description: Success Register
+      content:
+        application/json:
+          example:
+            success: true
+            message: Success Register
+    ResponseLogin:
+      description: Success Login
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Customer/properties/token"
+          example:
+            success: true
+            message: Success Login
+            token: exc54WqsR6ryu.mYTW340iPIlkqb
+    ResponseGetAllCustomer:
+      description: Success Get All Customer
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Customer"
+          example:
+            success: true
+            message: Success Get All Customer
+            data:
+              - id: 1
+                name: Andre
+                address: Jakarta
+                gender: Laki
+                email: andre@mail.com
+                password: $2y2vhvhgdhvjbj76LKh
+                token: exc54WqsR6ryu.mYTW340iPIlkqb
+              - id: 2
+                name: Andri
+                address: Jakarta
+                gender: Laki
+                email: andri@mail.com
+                password: $2y2vhvhgdhvjbj76LKh
+                token: exc54WqsR6ryu.mYTW340iPIlkqb
+    ResponseGetAllProduct:
+      description: Success Get All Product
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Product"
+          example:
+            success: true
+            message: Success Get All Product
+            data:
+              - id: 1
+                name: Mangga
+                price: 20000
+                stock: 20
+                category_id: 2
+              - id: 2
+                name: Jeruk
+                price: 15000
+                stock: 15
+                category_id: 1
+    ResponseGetProduct:
+      description: Success Get Product
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Product"
+          example:
+            success: true
+            message: Success Get Product
+            data:
+              id: 1
+              name: Mangga
+              price: 20000
+              stock: 20
+              category_id: 2
+    ResponseAddProduct:
+      description: Success Add Product
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Product"
+          example:
+            success: true
+            message: Success Add Product
+    ResponseEditProduct:
+      description: Success Edit Product
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Product"
+          example:
+            success: true
+            message: Success Edit Product
+    ResponseDeleteProduct:
+      description: Success Delete Product
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Product"
+          example:
+            success: true
+            message: Success Delete Product
+    ResponseGetAllCategories:
+      description: Success Get All Categories
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Categories"
+          example:
+            success: true
+            message: Success Get All Categories
+            data:
+              - id: 1
+                name: Software
+              - id: 2
+                name: Buah
+    ResponseAddCategories:
+      description: Success Add Categories
+      content:
+        application/json:
+          schema:
+            $ref:  "#/components/schemas/Categories"
+          example:
+            success: true
+            message: Success Add Categories
+    ResponseGetCategories:
+      description: Success Get Categories
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Categories"
+          example:
+            success: true
+            message: Success Get Categories
+            data:
+              id: 1
+              name: Buah
+    ResponseEditCategories:
+      description: Success Edit Categories
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Categories"
+          example:
+            success: true
+            message: Success Edit Categories
+    ResponseDeleteCategories:
+      description: Success Delete Categories
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Categories"
+          example:
+            success: true
+            message: Success Delete Product
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        address:
+          type: string
+        gender:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        token:
+          type: string
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: string
+        stock:
+          type: string
+        category_id":
+          $ref: "#components/schemas/Categories/properties/id"
+    Categories:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    
