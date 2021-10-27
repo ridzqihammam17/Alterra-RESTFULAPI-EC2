@@ -4,7 +4,7 @@ services:
     image: bitnami/mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: alta-store-api
     ports: 
       - 3306:3306
