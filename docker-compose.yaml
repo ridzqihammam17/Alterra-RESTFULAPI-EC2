@@ -11,7 +11,7 @@ services:
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD", "mysql", "-u", "root",  "-ptoor", "-e", "show schemas"]
+      test: ["CMD", "mysql", "-u", "root",  "-proot", "-e", "show schemas"]
       interval: 10s 
 
   app:
